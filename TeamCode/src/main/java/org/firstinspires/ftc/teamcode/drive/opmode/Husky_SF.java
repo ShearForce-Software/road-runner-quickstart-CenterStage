@@ -8,11 +8,10 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.DevicePropertie
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.TypeConversion;
 
-
 @SuppressWarnings("WeakerAccess")
 @I2cDeviceType
 @DeviceProperties(name = "Huskylens_SF", description = "AI Camera", xmlTag = "Husky_SF", builtIn = true)
-public class Husky_SF extends I2cDeviceSynchDevice<I2cDeviceSynch> implements I2cAddrConfig
+public class Husky_SF<value> extends I2cDeviceSynchDevice<I2cDeviceSynch> implements I2cAddrConfig
 {
     //----------------------------------------------------------------------------------------------
     // Constants
@@ -61,12 +60,11 @@ public class Husky_SF extends I2cDeviceSynchDevice<I2cDeviceSynch> implements I2
     protected short readShort2(Register reg)
     {
         return TypeConversion.byteArrayToShort(deviceClient.read(reg.bVal, 2));
-
     }
-    protected byte readByte(Register reg)  {
 
+    protected byte readByte(Register reg)
+    {
         return (deviceClient.read8(reg.bVal));
-
     }
 
 
@@ -142,6 +140,39 @@ public class Husky_SF extends I2cDeviceSynchDevice<I2cDeviceSynch> implements I2
             (byte) 0x32,
     };
 
+    public byte[] write_request_ObjectTrack_algorithm = {
+            (byte) 0x55,
+            (byte) 0xAA,
+            (byte) 0x11,
+            (byte) 0x02,
+            (byte) 0x2d,
+            (byte) 0x01, //Object Track
+            (byte) 0x00, //Object Track
+            (byte) 0x40,
+    };
+
+    public byte[] write_request_ObjectRecognition_algorithm = {
+            (byte) 0x55,
+            (byte) 0xAA,
+            (byte) 0x11,
+            (byte) 0x02,
+            (byte) 0x2d,
+            (byte) 0x02, //Object Recognize
+            (byte) 0x00, //Object Recognize
+            (byte) 0x41,
+    };
+
+    public byte[] write_request_LineTrack_algorithm = {
+            (byte) 0x55,
+            (byte) 0xAA,
+            (byte) 0x11,
+            (byte) 0x02,
+            (byte) 0x2d,
+            (byte) 0x03, //Line Track
+            (byte) 0x00, //Line Track
+            (byte) 0x42,
+    };
+
     public byte[] write_request_Color_algorithm = {
             (byte) 0x55,
             (byte) 0xAA,
@@ -153,15 +184,15 @@ public class Husky_SF extends I2cDeviceSynchDevice<I2cDeviceSynch> implements I2
             (byte) 0x43,
     };
 
-    public byte[] write_request_Face_algorithm = {
+    public byte[] write_request_Tag_algorithm = {
             (byte) 0x55,
             (byte) 0xAA,
             (byte) 0x11,
             (byte) 0x02,
             (byte) 0x2d,
-            (byte) 0x00, //Face Detect
-            (byte) 0x00, //Face Detect
-            (byte) 0x39,
+            (byte) 0x05, //Tag Detect
+            (byte) 0x00, //Tag Detect
+            (byte) 0x44,
     };
 
     //----------------------------------------------------------------------------------------------

@@ -139,6 +139,23 @@ public class Husky_SF<value> extends I2cDeviceSynchDevice<I2cDeviceSynch> implem
             (byte) 0x22,
             (byte) 0x32,
     };
+//0x00 0x00	ALGORITHM_FACE_RECOGNITION      - checksum 3F
+//0x01 0x00	ALGORITHM_OBJECT_TRACKING       - checksum 40
+//0x02 0x00	ALGORITHM_OBJECT_RECOGNITION    - checksum 41
+//0x03 0x00	ALGORITHM_LINE_TRACKING         - checksum 42
+//0x04 0x00	ALGORITHM_COLOR_RECOGNITION     - checksum 43
+//0x05 0x00	ALGORITHM_TAG_RECOGNITION       - checksum 44
+
+    public byte[] write_request_Face_algorithm = {
+            (byte) 0x55,
+            (byte) 0xAA,
+            (byte) 0x11,
+            (byte) 0x02,
+            (byte) 0x2d,
+            (byte) 0x00, //Face Rec
+            (byte) 0x00, //Face Rec
+            (byte) 0x3F,
+    };
 
     public byte[] write_request_ObjectTrack_algorithm = {
             (byte) 0x55,

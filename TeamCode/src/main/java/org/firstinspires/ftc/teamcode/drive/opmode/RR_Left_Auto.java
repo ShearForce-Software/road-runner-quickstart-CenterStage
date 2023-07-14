@@ -114,7 +114,7 @@ public class RR_Left_Auto extends LinearOpMode {
                 armControl.ReadyToGrabFromStack(drive);
                 armControl.WaitForTrajectoryToFinish(drive);
 
-                armControl.FindConeCenter();
+                //armControl.FindConeCenter();
                 ToRealStack = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .splineToConstantHeading(realStackVec, Math.toRadians(180),
                                 SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),

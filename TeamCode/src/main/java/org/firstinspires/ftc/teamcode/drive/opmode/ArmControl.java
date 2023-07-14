@@ -7,14 +7,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.concurrent.TimeUnit;
-
+@Config
 public class ArmControl {
-    // Define class members
+
     Servo  spinOne;
     Servo  spinTwo;
     Servo  armRote;
@@ -37,12 +38,12 @@ public class ArmControl {
     double rangeClaw;
     double rangeLeft;
 
-    int START_POS = 10; //5
-    int STOW_POS = 1080; //1400
-    int LOW_POS = 1250;   //1850
-    int MED_POS = 2300;   //3560
-    int HIGH_POS = 1710;//550     900
-    int STACK_POS = 550; //1100
+    public static int START_POS = 10; //5
+    public static int STOW_POS = 1080; //1400
+    public static int LOW_POS = 1250;   //1850
+    public static int MED_POS = 2300;   //3560
+    public static int HIGH_POS = 1710;//550     900
+    public static int STACK_POS = 550; //1100
 
     //FindCondeCenter variables
     public double forwardLG, shiftLG;

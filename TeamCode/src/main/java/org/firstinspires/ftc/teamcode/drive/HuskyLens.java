@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.util.TypeConversion;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+@Disabled
 @I2cSensor(name = "Husky Lens Camera", description = "Husky Lens Camera from DFRobot", xmlTag = "HuskyLens")
 
 public class HuskyLens extends I2cDeviceSynchDevice<I2cDeviceSynch>
@@ -31,8 +32,8 @@ public class HuskyLens extends I2cDeviceSynchDevice<I2cDeviceSynch>
         algorthimsByteID.put("ALGORITHM_COLOR_RECOGNITION", "0400");
         algorthimsByteID.put("ALGORITHM_TAG_RECOGNITION", "0500");
         algorthimsByteID.put("ALGORITHM_OBJECT_CLASSIFICATION", "0600");
-        algorthimsByteID.put("ALGORITHM_QR_CODE_RECOGNTITION", "0700");
-        algorthimsByteID.put("ALGORITHM_BARCODE_RECOGNTITION", "0800");
+        algorthimsByteID.put("ALGORITHM_QR_CODE_RECOGNITION", "0700");
+        algorthimsByteID.put("ALGORITHM_BARCODE_RECOGNITION", "0800");
     }
 
     @Override
@@ -108,7 +109,20 @@ public class HuskyLens extends I2cDeviceSynchDevice<I2cDeviceSynch>
         for (int i = 0; i < 6; i++) {
             if (bytesReceived[i] != expectedBytes[i]) return "Knock2 Return Didn't Match";
         }
-        return "Knock2 Received";
+        //return "Knock2 Received";
+        return String.format("%02X", bytesReceived[0]);
+    }
+
+    public String seesObject() {
+        byte[] bytesToSend = new byte[] {0x55, (byte)0xAA, 0x11, 0x00, 0x2C, 0x3C};
+        deviceClient.write(12, bytesToSend);
+        byte[] bytesReceived = deviceClient.read(6);
+        byte[] expectedBytes = new byte[] {0x55, (byte)0xAA, 0x11, 0x00, 0x2E, 0x3E};
+        for (int i = 0; i < 6; i++) {
+            if (bytesReceived[i] != expectedBytes[i]) return "Knock2 Return Didn't Match";
+        }
+        //return "Knock2 Received";
+        return String.format("%02X", bytesReceived[0]);
     }
 
     public byte[] cmdToBytes(String cmd) {

@@ -1,23 +1,28 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.I2cAddrConfig;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
+import com.qualcomm.robotcore.hardware.I2cWaitControl;
 import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.TypeConversion;
 
+import java.util.Arrays;
+
 @SuppressWarnings("WeakerAccess")
 @I2cDeviceType
 @DeviceProperties(name = "Huskylens_SF", description = "AI Camera", xmlTag = "Husky_SF", builtIn = true)
-public class Husky_SF<value> extends I2cDeviceSynchDevice<I2cDeviceSynch> implements I2cAddrConfig
+public class Husky_SF<value> extends I2cDeviceSynchDevice<I2cDeviceSynch> //implements I2cAddrConfig
 {
     //----------------------------------------------------------------------------------------------
     // Constants
     //----------------------------------------------------------------------------------------------
 
     public final static I2cAddr ADDRESS_I2C_DEFAULT = I2cAddr.create7bit(0x32);
+
+    String commandHeaderAndAddress = "55AA11";
+    private Object value;
 
     public enum Register
     {
@@ -62,10 +67,20 @@ public class Husky_SF<value> extends I2cDeviceSynchDevice<I2cDeviceSynch> implem
         return TypeConversion.byteArrayToShort(deviceClient.read(reg.bVal, 2));
     }
 
-    protected byte readByte(Register reg)
+
+    protected short readByte(Register reg)
     {
         return (deviceClient.read8(reg.bVal));
     }
+
+    protected short read(int registers, int value) {
+        return TypeConversion.byteArrayToShort(deviceClient.read(registers, value));
+    }
+    protected String read() {
+        String hex = String.format("%02X", deviceClient.read8());
+        return hex;
+    }
+
 
 
     //----------------------------------------------------------------------------------------------
@@ -99,10 +114,51 @@ public class Husky_SF<value> extends I2cDeviceSynchDevice<I2cDeviceSynch> implem
         return true;    // nothing to do
     }
 
-
     //----------------------------------------------------------------------------------------------
     // Write Commands
     //----------------------------------------------------------------------------------------------
+
+    public byte[] knock() {
+        byte[] cmd = cmdToBytes(commandHeaderAndAddress + "002c3c");
+        deviceClient.write(12, cmd);
+        //return processReturnData();
+        return cmd;
+    }
+    public byte[] cmdToBytes(String cmd) {
+        int length = cmd.length();
+        byte[] bytes = new byte[length / 2];
+        for (int i = 0; i < length; i += 2) {
+            bytes[i / 2] = (byte) Integer.parseInt(cmd.substring(i, i + 2), 16);
+        }
+        return bytes;
+    }
+
+    public byte[] write_knock(){
+        byte[] cmd = {(byte) 0x55,(byte) 0xAA,(byte) 0x11,(byte) 0x00,(byte) 0x2C,(byte) 0x3C};
+        deviceClient.write(12, cmd);
+        return cmd;
+    }
+    public String knock2() {
+        byte[] bytesToSend = new byte[] {0x55, (byte)0xAA, 0x11, 0x00, 0x2C, 0x3C};
+        deviceClient.write(12, bytesToSend);
+        byte[] bytesReceived = deviceClient.read(6);
+        byte[] expectedBytes = new byte[] {0x55, (byte)0xAA, 0x11, 0x00, 0x2E, 0x3E};
+        for (int i = 0; i < 6; i++) {
+            if (bytesReceived[i] != expectedBytes[i]) return "Knock2 Return Didn't Match";
+        }
+        //return "Knock2 Received";
+        return String.format("%02X", bytesReceived[0]);
+    }
+    public byte[] seesBlock()
+    {
+        deviceClient.write(12, write_command_request_blocks);
+        byte[] bytesReceived = deviceClient.read(32);// TODO: return more blocks later
+        return bytesReceived;
+    }
+
+    public int bytesToInt(byte low, byte high) {
+        return ((int) low & 0xff) | (((int) high & 0xff) << 8);
+    }
 
     public byte[] write_knock = {
             (byte) 0x55,
@@ -145,6 +201,17 @@ public class Husky_SF<value> extends I2cDeviceSynchDevice<I2cDeviceSynch> implem
 //0x03 0x00	ALGORITHM_LINE_TRACKING         - checksum 42
 //0x04 0x00	ALGORITHM_COLOR_RECOGNITION     - checksum 43
 //0x05 0x00	ALGORITHM_TAG_RECOGNITION       - checksum 44
+
+    public byte[] write_request_blocks_ID = {
+            (byte) 0x55,
+            (byte) 0xAA,
+            (byte) 0x11,
+            (byte) 0x02,
+            (byte) 0x27,
+            (byte) 0x01, //block ID 1
+            (byte) 0x00, //blcok ID 1
+            (byte) 0x3A,
+    };
 
     public byte[] write_request_Face_algorithm = {
             (byte) 0x55,
@@ -216,15 +283,15 @@ public class Husky_SF<value> extends I2cDeviceSynchDevice<I2cDeviceSynch> implem
     // I2cAddressConfig
     //----------------------------------------------------------------------------------------------
 
-    @Override public void setI2cAddress(I2cAddr newAddress)
-    {
-        this.deviceClient.setI2cAddress(newAddress);
-    }
-
-    @Override public I2cAddr getI2cAddress()
-    {
-        return this.deviceClient.getI2cAddress();
-    }
+//    @Override public void setI2cAddress(I2cAddr newAddress)
+//    {
+//        this.deviceClient.setI2cAddress(newAddress);
+//    }
+//
+//    @Override public I2cAddr getI2cAddress()
+//    {
+//        return this.deviceClient.getI2cAddress();
+//    }
 
 
     //----------------------------------------------------------------------------------------------

@@ -44,7 +44,7 @@ public class RR_Left_Auto extends LinearOpMode {
     double tagsize = 0.166;
     AprilTagDetection tagOfInterest = null;
     public static double stackY = -12;
-    public static double stackX = -58;
+    public static double stackX = -56;
     public static double junctionX = -26;
     public static double junctionY = -6;
     public static double firstConeVel = 55;
@@ -55,6 +55,7 @@ public class RR_Left_Auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ArmControl armControl = new ArmControl(false, false, this);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        String step = "none";
         armControl.STACK_POS = 550;
         Pose2d startPose = new Pose2d(-36, -64.5, Math.toRadians(-90));
 
@@ -94,11 +95,11 @@ public class RR_Left_Auto extends LinearOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(toStackVel))
                 .build();
 
-
         AprilTags();
         waitForStart();
         if (isStopRequested()) return;
         if (opModeIsActive()) {
+            
             drive.followTrajectorySequenceAsync(FirstCone);
             SlidesToHighHardCode(armControl, drive);
             armControl.GoToHigh180(drive);
@@ -108,12 +109,23 @@ public class RR_Left_Auto extends LinearOpMode {
 
             for (int i = 0; i < 3; i++){
                 armControl.openClaw();
+                step = "one";
+                telemetry.addData("step: ", step);
+                telemetry.update();
                 drive.followTrajectorySequenceAsync(ToAlmostStack);
+                step = "two";
+                telemetry.addData("step: ", step);
+                telemetry.update();
                 armControl.SpecialSleep(drive, 450);
                 armControl.closeClaw(); //god only knows why we need this here but it doesn't like to close the claw so
                 armControl.ReadyToGrabFromStack(drive);
+                step = "two a";
+                telemetry.addData("step: ", step);
+                telemetry.update();
                 armControl.WaitForTrajectoryToFinish(drive);
-
+                step = "two b";
+                telemetry.addData("step: ", step);
+                telemetry.update();
                 //armControl.FindConeCenter();
                 ToRealStack = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .splineToConstantHeading(realStackVec, Math.toRadians(180),
@@ -121,8 +133,17 @@ public class RR_Left_Auto extends LinearOpMode {
                                 SampleMecanumDrive.getAccelerationConstraint(20))
                         .build();
                 drive.followTrajectorySequenceAsync(ToRealStack);
+                step = "three";
+                telemetry.addData("step: ", step);
+                telemetry.update();
                 armControl.WaitForTrajectoryToFinish(drive);
+                step = "four";
+                telemetry.addData("step: ", step);
+                telemetry.update();
                 armControl.GrabFromStack(drive);
+                step = "five";
+                telemetry.addData("step: ", step);
+                telemetry.update();
                 armControl.SpecialSleep(drive, 200);
                 ToHighJunction = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                         .setReversed(true)
@@ -194,7 +215,8 @@ public class RR_Left_Auto extends LinearOpMode {
             armControl.closeClaw();
             armControl.liftWrist.setPosition(1);
             armControl.WaitForTrajectoryToFinish(drive);
-
+            telemetry.addData("step: ", step);
+            telemetry.update();
              //*/
 
         }

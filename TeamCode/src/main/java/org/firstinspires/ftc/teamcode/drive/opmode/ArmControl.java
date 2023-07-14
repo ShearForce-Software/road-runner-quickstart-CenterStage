@@ -643,6 +643,7 @@ public class ArmControl {
         while(opMode.opModeIsActive() && !opMode.isStopRequested() && drive.isBusy()) {
             if(drive != null){
                 drive.update();
+                opMode.telemetry.update();
             }
             if (IsDriverControl) {
                 if(IsFieldCentric) driveControlsFieldCentric();
@@ -660,7 +661,7 @@ public class ArmControl {
 //                opMode.telemetry.addData("x", poseEstimate.getY());
 //                opMode.telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
 //                opMode.telemetry.addData("front distance", rangeClaw);
-//                opMode.telemetry.update();
+                opMode.telemetry.update();
             }
             if (IsDriverControl) {
                 if(IsFieldCentric) driveControlsFieldCentric();
@@ -679,7 +680,7 @@ public class ArmControl {
 //                opMode.telemetry.addData("x", poseEstimate.getY());
 //                opMode.telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
 //                opMode.telemetry.addData("front distance", rangeClaw);
-//                opMode.telemetry.update();
+                  opMode.telemetry.update();
             }
             if (IsDriverControl) {
                 if(IsFieldCentric) driveControlsFieldCentric();

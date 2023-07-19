@@ -34,9 +34,9 @@ public class ArmControl {
     ColorSensor sensorColorRight;
     BNO055IMU imu;
 
-    double rangeRight;
+//    double rangeRight;
     double rangeClaw;
-    double rangeLeft;
+//    double rangeLeft;
 
     public static int START_POS = 10; //5
     public static int STOW_POS = 1080; //1400
@@ -46,32 +46,32 @@ public class ArmControl {
     public static int STACK_POS = 550; //1100
 
     //FindCondeCenter variables
-    public double forwardLG, shiftLG;
-    private double finalLeft, finalRight, rawRangeLeft, rawRangeRight,redConeDetect, blueConeDetect;
-    double RedLeftSensorOffset = 0.49;
-    double RedRightSensorOffset = 0.31;
-    double BlueLeftSensorOffset = 0.39;
-    double BlueRightSensorOffset = 0.28;
-
-    double shiftRedScaleValue = 0.925;
-    double forward_both_RedSensorScaleValue = -0.15;
-    double forward_single_RedSensorScaleValue1 = -0.45;
-    double forward_single_RedSensorScaleValue2 = -0.4;
-
-    double shiftBlueScaleValue = 0.95;
-    double forward_both_BlueSensorScaleValue = -0.1;
-    double forward_single_BlueSensorScaleValue1 = -0.3;
-    double forward_single_BlueSensorScaleValue2 = -0.2;
+//    public double forwardLG, shiftLG;
+//    private double finalLeft, finalRight, rawRangeLeft, rawRangeRight,redConeDetect, blueConeDetect;
+//    double RedLeftSensorOffset = 0.49;
+//    double RedRightSensorOffset = 0.31;
+//    double BlueLeftSensorOffset = 0.39;
+//    double BlueRightSensorOffset = 0.28;
+//
+//    double shiftRedScaleValue = 0.925;
+//    double forward_both_RedSensorScaleValue = -0.15;
+//    double forward_single_RedSensorScaleValue1 = -0.45;
+//    double forward_single_RedSensorScaleValue2 = -0.4;
+//
+//    double shiftBlueScaleValue = 0.95;
+//    double forward_both_BlueSensorScaleValue = -0.1;
+//    double forward_single_BlueSensorScaleValue1 = -0.3;
+//    double forward_single_BlueSensorScaleValue2 = -0.2;
 
     public boolean high = false;
     public boolean stow = false;
     public boolean readyToDrop = false;
     public boolean intake = true;
-    public boolean coneStack = false;
+//    public boolean coneStack = false;
     boolean IsDriverControl;
     boolean IsFieldCentric;
     LinearOpMode opMode;
-    public static final double ARM_POWER =  1 ;
+    final double ARM_POWER =  1.0;
     public ArmControl(boolean isDriverControl, boolean isFieldCentric, LinearOpMode opMode) {
         this.IsDriverControl = isDriverControl;
         this.IsFieldCentric = isFieldCentric;
@@ -95,9 +95,6 @@ public class ArmControl {
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
-//        leftRear = hardwareMap.dcMotor.get("leftRear");
-//        rightFront = hardwareMap.dcMotor.get("rightFront");
-//        rightRear = hardwareMap.dcMotor.get("rightRear");
 
         spinOne.setDirection(Servo.Direction.FORWARD);
         spinTwo.setDirection(Servo.Direction.REVERSE);
@@ -151,7 +148,7 @@ public class ArmControl {
             spinTwo.setPosition(0.79);
             armRote.setPosition(0.83);
             liftWrist.setPosition(0.63);
-            armGrip.setPosition(0);
+            armGrip.setPosition(0.0);
             SpecialSleep(null, 180);
             slideOne.setTargetPosition(115);
             slideTwo.setTargetPosition(115);
@@ -169,7 +166,7 @@ public class ArmControl {
         //************************************************************
         // verify claw is closed
         //************************************************************
-        armGrip.setPosition(0);
+        armGrip.setPosition(0.0);
         //************************************************************
         // swinging arm to high junction position
         //************************************************************
@@ -207,16 +204,14 @@ public class ArmControl {
         readyToDrop = true;
     }
     public void GoToHigh180(SampleMecanumDrive drive){
-        armGrip.setPosition(0);
-        spinOne.setPosition(.18);
-        spinTwo.setPosition(.18);
-        liftWrist.setPosition(.02);
         slideOne.setTargetPosition(HIGH_POS);
         slideTwo.setTargetPosition(HIGH_POS);
         slideOne.setPower(ARM_POWER);
         slideTwo.setPower(ARM_POWER);
-        slideOne.setPower(ARM_POWER);
-        slideTwo.setPower(ARM_POWER);
+        armGrip.setPosition(0.0);
+        spinOne.setPosition(.18);
+        spinTwo.setPosition(.18);
+        liftWrist.setPosition(.02);
         WaitForSlides(drive);
         slideOne.setPower(0);
         slideTwo.setPower(0);
@@ -233,7 +228,7 @@ public class ArmControl {
         //************************************************************
         // verify claw is closed
         //************************************************************
-        armGrip.setPosition(0);
+        armGrip.setPosition(0.0);
         //************************************************************
         // raise slides to medium junction delivery height
         //************************************************************
@@ -263,7 +258,7 @@ public class ArmControl {
         //************************************************************
         // verify claw is closed
         //************************************************************
-        armGrip.setPosition(0);
+        armGrip.setPosition(0.0);
         //************************************************************
         // raise slides to low junction delivery height
         //************************************************************
@@ -341,7 +336,7 @@ public class ArmControl {
         //************************************************************
         // Close claw
         //************************************************************
-        armGrip.setPosition(0);
+        armGrip.setPosition(0.0);
         liftWrist.setPosition(1);
         //************************************************************
         // rotate arm 180 degrees (so gripper is backwards)
@@ -377,37 +372,46 @@ public class ArmControl {
     }
 
     public void ReadyToGrabFromStack(SampleMecanumDrive drive) {
-        armGrip.setPosition(0); // Close claw
+        armGrip.setPosition(0.0); // Close claw
         armRote.setPosition(0.11); // rotate arm 180 degrees (so gripper is backwards)
         liftWrist.setPosition(1);
         SpecialSleep(drive, 500);
-        spinOne.setPosition(.93); // spin arm to cone pickup position//1
-        spinTwo.setPosition(.93);//1
+        //spinOne.setPosition(.93); // spin arm to cone pickup position//1    TODO: return to 1?
+        //spinTwo.setPosition(.93);//1                                        TODO: return to 1?
+        spinOne.setPosition(1.0); // returned to 1.0
+        spinTwo.setPosition(1.0); // returned to 1.0
         liftWrist.setPosition(0.6); // wrist to cone pickup position
         SpecialSleep(drive, 300);
         slideOne.setTargetPosition(STACK_POS);
         slideTwo.setTargetPosition(STACK_POS);
         slideOne.setPower(ARM_POWER);
         slideTwo.setPower(ARM_POWER);
-        armRote.setPosition(.11);
-        liftWrist.setPosition(.53);
+        //armRote.setPosition(.11);               // TODO: was this already set 11 lines up?
+        //liftWrist.setPosition(.53);             // possibly comment out     TODO: keep at 0.6?
         SpecialSleep(drive, 200);
         armGrip.setPosition(.14);
     }
 
     public void GrabFromStack(SampleMecanumDrive drive) {
-        spinOne.setPosition(1);
-        spinTwo.setPosition(1);
+        //spinOne.setPosition(1.0);               // not needed if corrections made in ReadyToGrabFromStack
+        //spinTwo.setPosition(1.0);               // not needed if corrections made in ReadyToGrabFromStack
+        //SpecialSleep(drive, 200);               // not needed if corrections made in ReadyToGrabFromStack
+        armGrip.setPosition(0.0);
         SpecialSleep(drive, 200);
-        armGrip.setPosition(0);
-        SpecialSleep(drive, 200);
+//        slideOne.setPower(ARM_POWER);               //setTarget before SetPower -- out of order??
+//        slideTwo.setPower(ARM_POWER);               //setTarget before SetPower -- out of order??
+//        slideOne.setTargetPosition(1610);           //setTarget before SetPower -- out of order??
+//        slideTwo.setTargetPosition(1610);           //setTarget before SetPower -- out of order??
+        //slideOne.setTargetPosition(1610);
+       //slideTwo.setTargetPosition(1610);
+        slideOne.setTargetPosition(HIGH_POS);         // replace hardcode with variable
+        slideTwo.setTargetPosition(HIGH_POS);         // replace hardcode with variable
         slideOne.setPower(ARM_POWER);
         slideTwo.setPower(ARM_POWER);
-        slideOne.setTargetPosition(1610);
-        slideTwo.setTargetPosition(1610);
-//        WaitForSlides(drive);
-//        slideOne.setPower(0);
-//        slideTwo.setPower(0);
+
+//        WaitForSlides(drive);                         // TODO: add this back in?
+//        slideOne.setPower(0);                         // TODO: add this back in?
+//        slideTwo.setPower(0);                         // TODO: add this back in?
     }
     private boolean slideAdjustOn = false;
 
@@ -554,12 +558,13 @@ public class ArmControl {
         //************************************************************
         // spin arm to cone high junct position
         //************************************************************
-        spinOne.setPosition(.18); // spin arm to cone stow rotate position
-        spinTwo.setPosition(.18); // spin arm to cone stow rotate position
+        spinOne.setPosition(.18); // spin arm to cone high junct position
+        spinTwo.setPosition(.18); // spin arm to cone high junct position
         //************************************************************
         // verify claw is closed
-        //*************************armGrip.setPosition(0);***********************************
-        liftWrist.setPosition(.02);
+        //************************************************************
+        armGrip.setPosition(0);
+        liftWrist.setPosition(.02); // adjust wrist for cone drop on junction
         //SpecialSleep(drive, 180);
     }
 
@@ -576,9 +581,9 @@ public class ArmControl {
         double x = -opMode.gamepad2.left_stick_x * 1.1;
         double rx = opMode.gamepad2.right_stick_x;
 
-        rangeRight = rightDistance.getDistance(DistanceUnit.CM);
+//        rangeRight = rightDistance.getDistance(DistanceUnit.CM);
         rangeClaw = clawDistance.getDistance(DistanceUnit.CM);
-        rangeLeft = leftDistance.getDistance(DistanceUnit.CM);
+//        rangeLeft = leftDistance.getDistance(DistanceUnit.CM);
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
@@ -597,9 +602,9 @@ public class ArmControl {
         double x = -opMode.gamepad2.left_stick_x * 1.1;
         double rx = opMode.gamepad2.right_stick_x;
 
-        rangeRight = rightDistance.getDistance(DistanceUnit.CM);
+//        rangeRight = rightDistance.getDistance(DistanceUnit.CM);
         rangeClaw = clawDistance.getDistance(DistanceUnit.CM);
-        rangeLeft = leftDistance.getDistance(DistanceUnit.CM);
+//        rangeLeft = leftDistance.getDistance(DistanceUnit.CM);
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
@@ -618,9 +623,9 @@ public class ArmControl {
         double x = opMode.gamepad2.left_stick_x * 1.1;
         double rx = opMode.gamepad2.right_stick_x;
 
-        rangeRight = rightDistance.getDistance(DistanceUnit.CM);
+//        rangeRight = rightDistance.getDistance(DistanceUnit.CM);
         rangeClaw = clawDistance.getDistance(DistanceUnit.CM);
-        rangeLeft = leftDistance.getDistance(DistanceUnit.CM);
+//        rangeLeft = leftDistance.getDistance(DistanceUnit.CM);
 
         double botHeading = -imu.getAngularOrientation().firstAngle;
 
@@ -688,162 +693,162 @@ public class ArmControl {
             }
         }
     }
-    public void FindConeCenter(){
-        rawRangeLeft = leftDistance.getDistance(DistanceUnit.INCH);
-        rawRangeRight = rightDistance.getDistance(DistanceUnit.INCH);
-        redConeDetect = (sensorColorLeft.red() + sensorColorRight.red()) / 2;
-        blueConeDetect = (sensorColorLeft.blue() + sensorColorRight.blue()) / 2;
-        //~~sort through data~~
-        if (redConeDetect > blueConeDetect) {
-            if (rawRangeLeft < 1.78) {
-                rangeLeft = (rawRangeLeft * 1.352 - 0.089) - RedLeftSensorOffset;
-            } else if (rawRangeLeft > 1.78) {
-                rangeLeft = (rawRangeLeft * 3.333 - 3.777) - RedLeftSensorOffset;
-            } else {
-                rangeLeft = rawRangeLeft;
-            }
-            if (rawRangeRight < 2.23) {
-                rangeRight = (rawRangeRight * 1.050 - 0.040) - RedRightSensorOffset;
-            } else if (rawRangeRight > 2.23) {
-                rangeRight = (rawRangeRight * 2.038 - 2.399) - RedRightSensorOffset;
-            } else {
-                rangeRight = rawRangeRight;
-            }
-
-            //apply left and right corrections
-            shiftLG = (rangeRight - rangeLeft) * shiftRedScaleValue;
-
-            //apply forward correction based on single sensor or both sensors seeing cone
-            if (Math.abs((rangeRight - rangeLeft)) > 1 && Math.abs((rangeRight - rangeLeft)) < 2.1) {
-                if (rangeLeft < rangeRight) {
-                    forwardLG = rangeLeft - forward_single_RedSensorScaleValue1;
-                } else {
-                    forwardLG = rangeRight - forward_single_RedSensorScaleValue1;
-                }
-            } else if (Math.abs((rangeRight - rangeLeft)) > 2.1) {
-                if (rangeLeft < rangeRight) {
-                    forwardLG = rangeLeft - forward_single_RedSensorScaleValue2;
-                } else {
-                    forwardLG = rangeRight - forward_single_RedSensorScaleValue2;
-                }
-            } else {
-                forwardLG = ((rangeRight + rangeLeft) / 2) - forward_both_RedSensorScaleValue;
-            }
-        }
-
-        // apply blue range calibration equations
-        if (blueConeDetect > redConeDetect) {
-            if (rawRangeLeft < 2.0) {
-                rangeLeft = (rawRangeLeft * 1.290 - 0.292) - BlueLeftSensorOffset;
-            } else if (rawRangeLeft > 2.0) {
-                rangeLeft = (rawRangeLeft * 3.947 - 5.623) - BlueLeftSensorOffset;
-            } else {
-                rangeLeft = rawRangeLeft;
-            }
-            if (rawRangeRight < 2.55) {
-                rangeRight = (rawRangeRight * 0.948 - 0.085) - BlueRightSensorOffset;
-            } else if (rawRangeRight > 2.55) {
-                rangeRight = (rawRangeRight * 2.838 - 5.360) - BlueRightSensorOffset;
-            } else {
-                rangeRight = rawRangeRight;
-            }
-            shiftLG = (rangeRight - rangeLeft) * shiftBlueScaleValue;
-
-            //apply forward correction based on single sensor or both sensors seeing cone
-            if (Math.abs((rangeRight - rangeLeft)) > 1 && Math.abs((rangeRight - rangeLeft)) < 2.1) {
-                if (rangeLeft < rangeRight) {
-                    forwardLG = rangeLeft - forward_single_BlueSensorScaleValue1;
-                } else {
-                    forwardLG = rangeRight - forward_single_BlueSensorScaleValue1;
-                }
-            } else if (Math.abs((rangeRight - rangeLeft)) > 2.1) {
-                if (rangeLeft < rangeRight) {
-                    forwardLG = rangeLeft - forward_single_BlueSensorScaleValue2;
-                } else {
-                    forwardLG = rangeRight - forward_single_BlueSensorScaleValue2;
-                }
-            } else {
-                forwardLG = ((rangeRight + rangeLeft) / 2) - forward_both_BlueSensorScaleValue;
-            }
-        }
-
-        /*
-        if(((sensorColorLeft.red() + sensorColorRight.red()) / 2) > ((sensorColorLeft.blue() + sensorColorRight.blue()) / 2)){
-            //red values
-            if(rawRangeLeft < 1.78){
-                finalLeft = (rawRangeLeft * 1.352 - 0.089) - 0.15;
-            }
-            else if(rawRangeLeft > 1.78){
-                finalLeft = (rawRangeLeft * 3.333 - 3.777) - 0.15;
-            }
-            else{
-                finalLeft = rawRangeLeft;
-            }
-            if(rawRangeRight < 2.23){
-                finalRight = (rawRangeRight * 1.050 - 0.040) - 0.15;
-            }
-            else if(rawRangeRight > 2.23){
-                finalRight = (rawRangeRight * 2.038 - 2.399) - 0.15;
-            }
-            else{
-                finalRight = rawRangeRight;
-            }
-            //find shift and forward values
-            shiftLG = (finalRight - finalLeft) * .85;
-            forwardLG = ((finalRight + finalLeft)/2) - .1;
-            //if the math ever pushes over an inch
-            if (shiftLG > 1.1) {
-                shiftLG = 1.25;
-            }
-            else if (shiftLG < -1.1){
-                shiftLG = -1.25;
-            }
-            if (shiftLG > 0.5) {
-                forwardLG = finalLeft + 0.2;
-            }
-            else if (shiftLG < -0.5){
-                forwardLG = finalRight + 0.2;
-            }
-        }
-        else{
-            //blue values
-            if(rawRangeLeft<2.0){
-                finalLeft = (rawRangeLeft * 1.290 - 0.292) - 0.1;
-            }
-            else if(rawRangeLeft>2.0){
-                finalLeft = (rawRangeLeft * 3.947 - 5.623) - 0.1;
-            }
-            else{
-                finalLeft = rawRangeLeft;
-            }
-            if(rawRangeRight<2.55){
-                finalRight = (rawRangeRight * 0.948 - 0.085) - 0.1;
-            }
-            else if(rawRangeRight>2.55){
-                finalRight = (rawRangeRight * 2.838 - 5.360) - 0.1;
-            }
-            else{
-                finalRight = rawRangeRight;
-            }
-            //find shift and forward values
-            shiftLG = (finalRight - finalLeft) * .85;
-            forwardLG = ((finalRight + finalLeft)/2) - 0.15;
-            //if the math ever pushes over an inch
-            if (shiftLG > 1.1) {
-                shiftLG = 1.25;
-            }
-            else if (shiftLG < -1.1){
-                shiftLG = -1.25;
-            }
-            if (shiftLG > 0.5) {
-                forwardLG = finalLeft + 0.1;
-            }
-            else if (shiftLG < -0.5){
-                forwardLG = finalRight + 0.1;
-            }
-        }
-
-         */
-    }
+//    public void FindConeCenter(){
+//        rawRangeLeft = leftDistance.getDistance(DistanceUnit.INCH);
+//        rawRangeRight = rightDistance.getDistance(DistanceUnit.INCH);
+//        redConeDetect = (sensorColorLeft.red() + sensorColorRight.red()) / 2;
+//        blueConeDetect = (sensorColorLeft.blue() + sensorColorRight.blue()) / 2;
+//        //~~sort through data~~
+//        if (redConeDetect > blueConeDetect) {
+//            if (rawRangeLeft < 1.78) {
+//                rangeLeft = (rawRangeLeft * 1.352 - 0.089) - RedLeftSensorOffset;
+//            } else if (rawRangeLeft > 1.78) {
+//                rangeLeft = (rawRangeLeft * 3.333 - 3.777) - RedLeftSensorOffset;
+//            } else {
+//                rangeLeft = rawRangeLeft;
+//            }
+//            if (rawRangeRight < 2.23) {
+//                rangeRight = (rawRangeRight * 1.050 - 0.040) - RedRightSensorOffset;
+//            } else if (rawRangeRight > 2.23) {
+//                rangeRight = (rawRangeRight * 2.038 - 2.399) - RedRightSensorOffset;
+//            } else {
+//                rangeRight = rawRangeRight;
+//            }
+//
+//            //apply left and right corrections
+//            shiftLG = (rangeRight - rangeLeft) * shiftRedScaleValue;
+//
+//            //apply forward correction based on single sensor or both sensors seeing cone
+//            if (Math.abs((rangeRight - rangeLeft)) > 1 && Math.abs((rangeRight - rangeLeft)) < 2.1) {
+//                if (rangeLeft < rangeRight) {
+//                    forwardLG = rangeLeft - forward_single_RedSensorScaleValue1;
+//                } else {
+//                    forwardLG = rangeRight - forward_single_RedSensorScaleValue1;
+//                }
+//            } else if (Math.abs((rangeRight - rangeLeft)) > 2.1) {
+//                if (rangeLeft < rangeRight) {
+//                    forwardLG = rangeLeft - forward_single_RedSensorScaleValue2;
+//                } else {
+//                    forwardLG = rangeRight - forward_single_RedSensorScaleValue2;
+//                }
+//            } else {
+//                forwardLG = ((rangeRight + rangeLeft) / 2) - forward_both_RedSensorScaleValue;
+//            }
+//        }
+//
+//        // apply blue range calibration equations
+//        if (blueConeDetect > redConeDetect) {
+//            if (rawRangeLeft < 2.0) {
+//                rangeLeft = (rawRangeLeft * 1.290 - 0.292) - BlueLeftSensorOffset;
+//            } else if (rawRangeLeft > 2.0) {
+//                rangeLeft = (rawRangeLeft * 3.947 - 5.623) - BlueLeftSensorOffset;
+//            } else {
+//                rangeLeft = rawRangeLeft;
+//            }
+//            if (rawRangeRight < 2.55) {
+//                rangeRight = (rawRangeRight * 0.948 - 0.085) - BlueRightSensorOffset;
+//            } else if (rawRangeRight > 2.55) {
+//                rangeRight = (rawRangeRight * 2.838 - 5.360) - BlueRightSensorOffset;
+//            } else {
+//                rangeRight = rawRangeRight;
+//            }
+//            shiftLG = (rangeRight - rangeLeft) * shiftBlueScaleValue;
+//
+//            //apply forward correction based on single sensor or both sensors seeing cone
+//            if (Math.abs((rangeRight - rangeLeft)) > 1 && Math.abs((rangeRight - rangeLeft)) < 2.1) {
+//                if (rangeLeft < rangeRight) {
+//                    forwardLG = rangeLeft - forward_single_BlueSensorScaleValue1;
+//                } else {
+//                    forwardLG = rangeRight - forward_single_BlueSensorScaleValue1;
+//                }
+//            } else if (Math.abs((rangeRight - rangeLeft)) > 2.1) {
+//                if (rangeLeft < rangeRight) {
+//                    forwardLG = rangeLeft - forward_single_BlueSensorScaleValue2;
+//                } else {
+//                    forwardLG = rangeRight - forward_single_BlueSensorScaleValue2;
+//                }
+//            } else {
+//                forwardLG = ((rangeRight + rangeLeft) / 2) - forward_both_BlueSensorScaleValue;
+//            }
+//        }
+//
+//        /*
+//        if(((sensorColorLeft.red() + sensorColorRight.red()) / 2) > ((sensorColorLeft.blue() + sensorColorRight.blue()) / 2)){
+//            //red values
+//            if(rawRangeLeft < 1.78){
+//                finalLeft = (rawRangeLeft * 1.352 - 0.089) - 0.15;
+//            }
+//            else if(rawRangeLeft > 1.78){
+//                finalLeft = (rawRangeLeft * 3.333 - 3.777) - 0.15;
+//            }
+//            else{
+//                finalLeft = rawRangeLeft;
+//            }
+//            if(rawRangeRight < 2.23){
+//                finalRight = (rawRangeRight * 1.050 - 0.040) - 0.15;
+//            }
+//            else if(rawRangeRight > 2.23){
+//                finalRight = (rawRangeRight * 2.038 - 2.399) - 0.15;
+//            }
+//            else{
+//                finalRight = rawRangeRight;
+//            }
+//            //find shift and forward values
+//            shiftLG = (finalRight - finalLeft) * .85;
+//            forwardLG = ((finalRight + finalLeft)/2) - .1;
+//            //if the math ever pushes over an inch
+//            if (shiftLG > 1.1) {
+//                shiftLG = 1.25;
+//            }
+//            else if (shiftLG < -1.1){
+//                shiftLG = -1.25;
+//            }
+//            if (shiftLG > 0.5) {
+//                forwardLG = finalLeft + 0.2;
+//            }
+//            else if (shiftLG < -0.5){
+//                forwardLG = finalRight + 0.2;
+//            }
+//        }
+//        else{
+//            //blue values
+//            if(rawRangeLeft<2.0){
+//                finalLeft = (rawRangeLeft * 1.290 - 0.292) - 0.1;
+//            }
+//            else if(rawRangeLeft>2.0){
+//                finalLeft = (rawRangeLeft * 3.947 - 5.623) - 0.1;
+//            }
+//            else{
+//                finalLeft = rawRangeLeft;
+//            }
+//            if(rawRangeRight<2.55){
+//                finalRight = (rawRangeRight * 0.948 - 0.085) - 0.1;
+//            }
+//            else if(rawRangeRight>2.55){
+//                finalRight = (rawRangeRight * 2.838 - 5.360) - 0.1;
+//            }
+//            else{
+//                finalRight = rawRangeRight;
+//            }
+//            //find shift and forward values
+//            shiftLG = (finalRight - finalLeft) * .85;
+//            forwardLG = ((finalRight + finalLeft)/2) - 0.15;
+//            //if the math ever pushes over an inch
+//            if (shiftLG > 1.1) {
+//                shiftLG = 1.25;
+//            }
+//            else if (shiftLG < -1.1){
+//                shiftLG = -1.25;
+//            }
+//            if (shiftLG > 0.5) {
+//                forwardLG = finalLeft + 0.1;
+//            }
+//            else if (shiftLG < -0.5){
+//                forwardLG = finalRight + 0.1;
+//            }
+//        }
+//
+//         */
+//    }
 }
 

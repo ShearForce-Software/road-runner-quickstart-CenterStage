@@ -43,7 +43,7 @@ public class ArmControl {
     public static int LOW_POS = 1250;   //1850
     public static int MED_POS = 2300;   //3560
     public static int HIGH_POS = 1710;//550     900
-    public static int STACK_POS = 550; //1100
+    public static int STACK_POS =450;//1100
 
     //FindCondeCenter variables
 //    public double forwardLG, shiftLG;
@@ -686,6 +686,25 @@ public class ArmControl {
 //                opMode.telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
 //                opMode.telemetry.addData("front distance", rangeClaw);
                   opMode.telemetry.update();
+            }
+            if (IsDriverControl) {
+                if(IsFieldCentric) driveControlsFieldCentric();
+                if(!IsFieldCentric) driveControlsRobotCentric();
+            }
+        }
+    }
+    public void SpecialSleepTraj(SampleMecanumDrive drive, long milliseconds) {
+        for (long stop = System.nanoTime()+ TimeUnit.MILLISECONDS.toNanos(milliseconds); stop>System.nanoTime();) {
+            if (!opMode.opModeIsActive() || opMode.isStopRequested() )
+                if(!drive.isBusy()) return;
+                if(drive != null) {
+                drive.update();
+//                Pose2d poseEstimate = drive.getPoseEstimate();
+//                opMode.telemetry.addData("y", poseEstimate.getX());
+//                opMode.telemetry.addData("x", poseEstimate.getY());
+//                opMode.telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
+//                opMode.telemetry.addData("front distance", rangeClaw);
+                opMode.telemetry.update();
             }
             if (IsDriverControl) {
                 if(IsFieldCentric) driveControlsFieldCentric();

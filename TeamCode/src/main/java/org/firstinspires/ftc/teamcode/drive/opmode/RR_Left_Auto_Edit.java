@@ -46,8 +46,8 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
     public static double startX = -36;            // added start variable
     public static double startY = -64.5;          // added start variable
     public static double startHeading = -90;      // added start variable
-    public static double stackY = -12;
-    public static double stackX = -56;
+    public static double stackY = -12.5;
+    public static double stackX = -58;
     public static double junctionX = -26;
     public static double junctionY = -6;
     public static double junction1X = -26.5;          // added for to ID specific junction X
@@ -56,10 +56,10 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
     public static double junction2X = -26;            // added for to ID specific junction X
     public static double junction2Y = -6;             // added for to ID specific junction Y
     public static double junction2Heading = -135;     // added for to ID specific junction Heading
-
-    public static double firstConeVel = 55;
-    public static double toStackVel = 25;
-    public static double toHighVel = 25;
+    public static double numConesStack = 4;
+    public static double toFirstConeVel = 55;
+    public static double toStackVel = 30;
+    public static double toHighVel = 30;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,7 +68,7 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
 
         String step = "none";           // telemetry messages for steps in autonomous
 
-        armControl.STACK_POS = 550;
+        //armControl.STACK_POS = 550;
 
         Pose2d startPose = new Pose2d(startX, startY, Math.toRadians(startHeading));  // added to replace line above
         Vector2d junction1Vec = new Vector2d(junction1X, junction1Y);
@@ -83,13 +83,13 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
         TrajectorySequence FirstCone = drive.trajectorySequenceBuilder(startPose)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(-36, -20), Math.toRadians(90),
-                        SampleMecanumDrive.getVelocityConstraint(firstConeVel,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(toFirstConeVel,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(40))
                 .splineToSplineHeading(new Pose2d(junction1Vec.getX()-(2*(1/Math.sqrt(2))), junction1Vec.getY()-(2*(1/Math.sqrt(2))), Math.toRadians(-135)), Math.toRadians(45), //TODO: check signal cone deflection with and without sqrt code
-                        SampleMecanumDrive.getVelocityConstraint(firstConeVel,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(toFirstConeVel,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .splineToConstantHeading(junction1Vec, Math.toRadians(45),
-                        SampleMecanumDrive.getVelocityConstraint(firstConeVel-20,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH), // TODO: check velocity
+                        SampleMecanumDrive.getVelocityConstraint(toFirstConeVel -20,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH), // TODO: check velocity
                         SampleMecanumDrive.getAccelerationConstraint(35))
                 .build();
 
@@ -117,7 +117,7 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
             //armControl.SpecialSleep(drive, 1350);
             armControl.openClaw();
 
-            for (int i = 0; i < 3; i++){
+            for (int i = 0; i < numConesStack; i++){
                 //armControl.openClaw();                                // open claw
                 step = "one - command open claw";
                 telemetry.addData("step: ", step);                 // add telemetry status
@@ -164,13 +164,12 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
                 drive.followTrajectorySequenceAsync(ToHighJunction);        // drive to high junction
                 //SlidesToHighHardCode(armControl, drive); //love it sm       // sets conditions to raise the slides to high position but does not command it
                 armControl.autoArmToHigh(drive);                            // actually commands and executes arm movement for delivery
-                armControl.SpecialSleep(drive, 1850);             // wait 1.85 sec then open claw - there is no wait for trajectory to complete
-                armControl.STACK_POS -= 125;
+                armControl.SpecialSleepTraj(drive, 1850);             // wait 1.85 sec then open claw - there is no wait for trajectory to complete
+                if (i == 1 || i == 2) armControl.STACK_POS -= 150;
+                if (i > 2) armControl.STACK_POS = armControl.START_POS;
                 armControl.openClaw();
                 // set position for next cone pickup
             }
-
-
             //~~~~~~~~~~parking testing note: test between pose estimate and actual pose
 
             if (tagOfInterest.id==11){
@@ -218,8 +217,8 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
             }
             armControl.SpecialSleep(drive, 1000); //~~~~~EXPERIMENT with this time
             armControl.ReturnFromHigh(drive);
-            armControl.closeClaw();
-            armControl.liftWrist.setPosition(1);
+            //armControl.closeClaw();
+            armControl.liftWrist.setPosition(.6);
             armControl.WaitForTrajectoryToFinish(drive);
             step = "six - finished parking";
             telemetry.addData("step: ", step);

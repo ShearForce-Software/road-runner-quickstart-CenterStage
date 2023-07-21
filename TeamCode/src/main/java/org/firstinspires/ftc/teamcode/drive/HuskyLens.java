@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 @Disabled
-@I2cSensor(name = "Husky Lens Camera", description = "Husky Lens Camera from DFRobot", xmlTag = "HuskyLens")
+//enable this line of code to use the driver and configure the camera on the DS
+//@I2cSensor(name = "Husky Lens Camera", description = "Husky Lens Camera from DFRobot", xmlTag = "HuskyLens")
 
 public class HuskyLens extends I2cDeviceSynchDevice<I2cDeviceSynch>
 {

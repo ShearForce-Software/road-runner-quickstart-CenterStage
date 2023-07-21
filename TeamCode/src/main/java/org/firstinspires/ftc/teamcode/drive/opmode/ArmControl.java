@@ -10,19 +10,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.roadrunner.SampleMecanumDrive;
 
 import java.util.concurrent.TimeUnit;
 @Config
 public class ArmControl {
 
+    public static final double ARM_POWER = 1;
     Servo  spinOne;
     Servo  spinTwo;
     Servo  armRote;
-    Servo  liftWrist;
+    public Servo  liftWrist;
     Servo  armGrip;
-    DcMotor slideOne;
-    DcMotor slideTwo;
+    public DcMotor slideOne;
+    public DcMotor slideTwo;
     DcMotor leftFront;
     DcMotor leftRear;
     DcMotor rightFront;
@@ -43,7 +44,7 @@ public class ArmControl {
     public static int LOW_POS = 1250;   //1850
     public static int MED_POS = 2300;   //3560
     public static int HIGH_POS = 1710;//550     900
-    public static int STACK_POS =450;//1100
+    public static int STACK_POS = 450;//1100
 
     //FindCondeCenter variables
 //    public double forwardLG, shiftLG;
@@ -71,7 +72,6 @@ public class ArmControl {
     boolean IsDriverControl;
     boolean IsFieldCentric;
     LinearOpMode opMode;
-    final double ARM_POWER =  1.0;
     public ArmControl(boolean isDriverControl, boolean isFieldCentric, LinearOpMode opMode) {
         this.IsDriverControl = isDriverControl;
         this.IsFieldCentric = isFieldCentric;
@@ -648,6 +648,8 @@ public class ArmControl {
         while(opMode.opModeIsActive() && !opMode.isStopRequested() && drive.isBusy()) {
             if(drive != null){
                 drive.update();
+                opMode.telemetry.addData("stack pos", STACK_POS);
+                opMode.telemetry.addData("slide current pos", slideOne.getCurrentPosition());
                 opMode.telemetry.update();
             }
             if (IsDriverControl) {
@@ -666,6 +668,8 @@ public class ArmControl {
 //                opMode.telemetry.addData("x", poseEstimate.getY());
 //                opMode.telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
 //                opMode.telemetry.addData("front distance", rangeClaw);
+                opMode.telemetry.addData("stack pos", STACK_POS);
+                opMode.telemetry.addData("slide current pos", slideOne.getCurrentPosition());
                 opMode.telemetry.update();
             }
             if (IsDriverControl) {
@@ -685,6 +689,8 @@ public class ArmControl {
 //                opMode.telemetry.addData("x", poseEstimate.getY());
 //                opMode.telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
 //                opMode.telemetry.addData("front distance", rangeClaw);
+                opMode.telemetry.addData("stack pos", STACK_POS);
+                opMode.telemetry.addData("slide current pos", slideOne.getCurrentPosition());
                   opMode.telemetry.update();
             }
             if (IsDriverControl) {
@@ -704,6 +710,8 @@ public class ArmControl {
 //                opMode.telemetry.addData("x", poseEstimate.getY());
 //                opMode.telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
 //                opMode.telemetry.addData("front distance", rangeClaw);
+                    opMode.telemetry.addData("stack pos", STACK_POS);
+                    opMode.telemetry.addData("slide current pos", slideOne.getCurrentPosition());
                 opMode.telemetry.update();
             }
             if (IsDriverControl) {

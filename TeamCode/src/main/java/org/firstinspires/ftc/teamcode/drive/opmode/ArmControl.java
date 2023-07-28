@@ -380,7 +380,7 @@ public class ArmControl {
         //spinTwo.setPosition(.93);//1                                        TODO: return to 1?
         spinOne.setPosition(1.0); // returned to 1.0
         spinTwo.setPosition(1.0); // returned to 1.0
-        liftWrist.setPosition(0.6); // wrist to cone pickup position
+        liftWrist.setPosition(0.58); // wrist to cone pickup position
         SpecialSleep(drive, 300);
         slideOne.setTargetPosition(STACK_POS);
         slideTwo.setTargetPosition(STACK_POS);

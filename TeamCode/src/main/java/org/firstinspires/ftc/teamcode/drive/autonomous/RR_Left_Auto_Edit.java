@@ -47,19 +47,19 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
     public static double startY = -64.5;          // added start variable
     public static double startHeading = -90;      // added start variable
     public static double stackY = -12.5;
-    public static double stackX = -57.5;
+    public static double stackX = -58.5;
     //public static double junctionX = -26;
     //public static double junctionY = -6;
-    public static double junction1X = -27;          // added for to ID specific junction X
-    public static double junction1Y = -7;           // added for to ID specific junction Y
+    public static double junction1X = -26.5;          // added for to ID specific junction X
+    public static double junction1Y = -7.5;           // added for to ID specific junction Y
     public static double junction1Heading = -135;     // added for to ID specific junction Heading
     //public static double junction2X = -26;            // added for to ID specific junction X
     //public static double junction2Y = -6;             // added for to ID specific junction Y
     //public static double junction2Heading = -135;     // added for to ID specific junction Heading
     public static double numConesStack = 4;
     public static double toFirstConeVel = 55;
-    public static double toStackVel = 30;
-    public static double toHighVel = 30;
+    public static double toStackVel = 32.5;
+    public static double toHighVel = 32.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -163,7 +163,7 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
                 //SlidesToHighHardCode(armControl, drive);                 // sets conditions to raise the slides to high position but does not command it
                 armControl.autoArmToHigh(drive);                            // actually commands and executes arm movement for delivery
                 armControl.SpecialSleepTraj(drive, 1850);             // wait 1.85 sec then open claw - there is no wait for trajectory to complete
-                if (i == 1 || i == 2) armControl.STACK_POS -= 150;
+                if (i == 1 || i == 2) armControl.STACK_POS -= 175;
                 if (i > 2) armControl.STACK_POS = armControl.START_POS;     //start pos = 10
                 armControl.openClaw();
                 // set position for next cone pickup

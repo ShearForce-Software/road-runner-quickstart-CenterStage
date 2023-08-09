@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "2) Methods Main Driver Field Centric (Manual Drop)")
 
 public class METHODS_DOC_FC_Manual_Drop extends LinearOpMode {
-    ArmControl armControl = new ArmControl(true, true, this);
+    ArmControl armControl = new ArmControl(true, true, true, this);
     @Override
     public void runOpMode() throws InterruptedException {
         armControl.Init(hardwareMap);

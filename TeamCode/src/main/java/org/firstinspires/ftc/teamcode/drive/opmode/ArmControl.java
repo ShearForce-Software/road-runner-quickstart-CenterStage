@@ -71,10 +71,12 @@ public class ArmControl {
 //    public boolean coneStack = false;
     boolean IsDriverControl;
     boolean IsFieldCentric;
+    boolean IsFastServos;
     LinearOpMode opMode;
-    public ArmControl(boolean isDriverControl, boolean isFieldCentric, LinearOpMode opMode) {
+    public ArmControl(boolean isDriverControl, boolean isFieldCentric, boolean isFastServos, LinearOpMode opMode) {
         this.IsDriverControl = isDriverControl;
         this.IsFieldCentric = isFieldCentric;
+        this.IsFastServos = isFastServos;
         this.opMode = opMode;
     }
 
@@ -131,8 +133,14 @@ public class ArmControl {
             slideTwo.setPower(0);
             armGrip.setPosition(.145);
             SpecialSleep(null, 180);
-            spinOne.setPosition(1);
-            spinTwo.setPosition(1);
+            if (IsFastServos){
+                spinOne.setPosition(.97); //TODO: find pos
+                spinTwo.setPosition(.97);
+            }
+            else {
+                spinOne.setPosition(1);
+                spinTwo.setPosition(1);
+            }
             armRote.setPosition(.11);
             liftWrist.setPosition(.53);
         }
@@ -144,8 +152,14 @@ public class ArmControl {
             WaitForSlides(drive);
             slideOne.setPower(0);
             slideTwo.setPower(0);
-            spinOne.setPosition(0.79);
-            spinTwo.setPosition(0.79);
+            if (IsFastServos){
+                spinOne.setPosition(0.74); //TODO: find pos
+                spinTwo.setPosition(0.74);
+            }
+            else {
+                spinOne.setPosition(0.79);
+                spinTwo.setPosition(0.79);
+            }
             armRote.setPosition(0.83);
             liftWrist.setPosition(0.63);
             armGrip.setPosition(0.0);
@@ -155,8 +169,14 @@ public class ArmControl {
             slideOne.setPower(ARM_POWER);
             slideTwo.setPower(ARM_POWER);
             WaitForSlides(drive);
-            spinOne.setPosition(0.81);
-            spinTwo.setPosition(0.81);
+            if (IsFastServos){
+                spinOne.setPosition(0.83); //TODO: find pos
+                spinTwo.setPosition(0.83);
+            }
+            else {
+                spinOne.setPosition(0.81);
+                spinTwo.setPosition(0.81);
+            }
             liftWrist.setPosition(0.88);
         }
     }
@@ -170,8 +190,14 @@ public class ArmControl {
         //************************************************************
         // swinging arm to high junction position
         //************************************************************
-        spinOne.setPosition(.18);
-        spinTwo.setPosition(.18);
+        if (IsFastServos){
+            spinOne.setPosition(0.08); //TODO: find pos
+            spinTwo.setPosition(0.08);
+        }
+        else {
+            spinOne.setPosition(0.18);
+            spinTwo.setPosition(0.18);
+        }
         liftWrist.setPosition(.02);
         //SpecialSleep(drive, 180);
         //************************************************************
@@ -209,8 +235,14 @@ public class ArmControl {
         slideOne.setPower(ARM_POWER);
         slideTwo.setPower(ARM_POWER);
         armGrip.setPosition(0.0);
-        spinOne.setPosition(.18);
-        spinTwo.setPosition(.18);
+        if (IsFastServos){
+            spinOne.setPosition(0.08); //TODO: find pos
+            spinTwo.setPosition(0.08);
+        }
+        else {
+            spinOne.setPosition(0.18);
+            spinTwo.setPosition(0.18);
+        }
         liftWrist.setPosition(.02);
         WaitForSlides(drive);
         slideOne.setPower(0);
@@ -242,8 +274,14 @@ public class ArmControl {
         //************************************************************
         // spin arm to medium junction position
         //************************************************************
-        spinOne.setPosition(0.83);
-        spinTwo.setPosition(0.83);
+        if (IsFastServos){
+            spinOne.setPosition(0.88); //TODO: find pos
+            spinTwo.setPosition(0.88);
+        }
+        else {
+            spinOne.setPosition(0.83);
+            spinTwo.setPosition(0.83);
+        }
         //************************************************************
         // wrist to delivery angle (Medium)
         //************************************************************
@@ -272,8 +310,14 @@ public class ArmControl {
         //************************************************************
         // spin arm to low junction position
         //************************************************************
-        spinOne.setPosition(0.83);
-        spinTwo.setPosition(0.83);
+        if (IsFastServos){
+            spinOne.setPosition(0.88); //TODO: find pos
+            spinTwo.setPosition(0.88);
+        }
+        else {
+            spinOne.setPosition(0.83);
+            spinTwo.setPosition(0.83);
+        }
         //************************************************************
         // wrist to delivery angle (Low)
         //************************************************************
@@ -452,8 +496,14 @@ public class ArmControl {
         slideOne.setPower(0);
         slideTwo.setPower(0);
         armGrip.setPosition(0);
-        spinOne.setPosition(.88);
-        spinTwo.setPosition(.88);
+        if (IsFastServos){
+            spinOne.setPosition(0.92); // TODO: find pos
+            spinTwo.setPosition(0.92);
+        }
+        else {
+            spinOne.setPosition(0.88);
+            spinTwo.setPosition(0.88);
+        }
         armRote.setPosition(.11);
         liftWrist.setPosition(.75);
     }
@@ -518,8 +568,14 @@ public class ArmControl {
         //************************************************************
         // spin arm to cone stow rotate position
         //************************************************************
-        spinOne.setPosition(.84); // spin arm to cone stow rotate position
-        spinTwo.setPosition(.84); // spin arm to cone stow rotate position
+        if (IsFastServos){
+            spinOne.setPosition(0.88); //TODO: find pos
+            spinTwo.setPosition(0.88);
+        }
+        else {
+            spinOne.setPosition(0.84);
+            spinTwo.setPosition(0.84);
+        }
         stow = true;
         // set input variable to false
         intake = false;
@@ -558,8 +614,14 @@ public class ArmControl {
         //************************************************************
         // spin arm to cone high junct position
         //************************************************************
-        spinOne.setPosition(.18); // spin arm to cone high junct position
-        spinTwo.setPosition(.18); // spin arm to cone high junct position
+        if (IsFastServos){
+            spinOne.setPosition(0.08); //TODO: find pos
+            spinTwo.setPosition(0.08);
+        }
+        else {
+            spinOne.setPosition(0.18);
+            spinTwo.setPosition(0.18);
+        }
         //************************************************************
         // verify claw is closed
         //************************************************************

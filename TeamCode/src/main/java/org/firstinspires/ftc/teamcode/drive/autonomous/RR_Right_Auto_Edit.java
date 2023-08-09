@@ -18,7 +18,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
-
 /*
  * Op mode to experiment with Road Runner Autonomous Routes.
  * Utilization of the dashboard is recommended to visualize routes and check path following.
@@ -48,23 +47,23 @@ public class RR_Right_Auto_Edit extends LinearOpMode {
     public static double startY = -64.5;          // added start variable
     public static double startHeading = -90;      // added start variable
     public static double stackY = -12.5;
-    public static double stackX = 58;
+    public static double stackX = 58.5;
     public static double junctionX = 26;
     public static double junctionY = -6;
     public static double junction1X = 26.5;          // added for to ID specific junction X
-    public static double junction1Y = -6.5;           // added for to ID specific junction Y
+    public static double junction1Y = -7.5;           // added for to ID specific junction Y
     public static double junction1Heading = -45;     // added for to ID specific junction Heading
     public static double junction2X = 26;            // added for to ID specific junction X
     public static double junction2Y = -6;             // added for to ID specific junction Y
     public static double junction2Heading = -45;     // added for to ID specific junction Heading
     public static double numConesStack = 4;
     public static double toFirstConeVel = 55;
-    public static double toStackVel = 30;
-    public static double toHighVel = 30;
+    public static double toStackVel = 32.5;
+    public static double toHighVel = 32.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ArmControl armControl = new ArmControl(false, false, this);
+        ArmControl armControl = new ArmControl(false, false, true, this);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         String step = "none";           // telemetry messages for steps in autonomous
@@ -95,16 +94,6 @@ public class RR_Right_Auto_Edit extends LinearOpMode {
                 .build();
 
        // TrajectorySequence ToStack = drive.trajectorySequenceBuilder(drive.ce())  // use getPoseEstimate vs. junction1Pos to minimize error
-        TrajectorySequence ToStack = drive.trajectorySequenceBuilder(junction1Pos)
-
-                .setReversed(false)
-                .splineToSplineHeading(new Pose2d(38, stackY, Math.toRadians(0)), Math.toRadians(0),
-                        SampleMecanumDrive.getVelocityConstraint(toStackVel,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(toStackVel))
-                .splineToLinearHeading(stackPos, Math.toRadians(0),
-                        SampleMecanumDrive.getVelocityConstraint(toStackVel,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(toStackVel))
-                .build();
 
         AprilTags();
         waitForStart();
@@ -124,6 +113,16 @@ public class RR_Right_Auto_Edit extends LinearOpMode {
                 telemetry.addData("step: ", step);                 // add telemetry status
                 telemetry.update();                                   // display on screen
 
+                TrajectorySequence ToStack = drive.trajectorySequenceBuilder(junction1Pos)
+
+                        .setReversed(false)
+                        .splineToSplineHeading(new Pose2d(38, stackY, Math.toRadians(0)), Math.toRadians(0),
+                                SampleMecanumDrive.getVelocityConstraint(toStackVel,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(toStackVel))
+                        .splineToLinearHeading(stackPos, Math.toRadians(0),
+                                SampleMecanumDrive.getVelocityConstraint(toStackVel,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(toStackVel))
+                        .build();
                 drive.followTrajectorySequenceAsync(ToStack);         // drive toward stack without using distance sensor correction
 
                 step = "two - command movement to stack";
@@ -166,37 +165,14 @@ public class RR_Right_Auto_Edit extends LinearOpMode {
                 //SlidesToHighHardCode(armControl, drive); //love it sm       // sets conditions to raise the slides to high position but does not command it
                 armControl.autoArmToHigh(drive);                            // actually commands and executes arm movement for delivery
                 armControl.SpecialSleepTraj(drive, 1850);             // wait 1.85 sec then open claw - there is no wait for trajectory to complete
-                if (i == 1 || i == 2) armControl.STACK_POS -= 150;
+                if (i == 1 || i == 2) armControl.STACK_POS -= 175;
                 if (i > 2) armControl.STACK_POS = armControl.START_POS;
                 armControl.openClaw();
                 // set position for next cone pickup
             }
             //~~~~~~~~~~parking testing note: test between pose estimate and actual pose
 
-            if (tagOfInterest.id==11){
-                //to first spot
-                TrajectorySequence Park1 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                        .setReversed(false)
-                        .splineToSplineHeading(new Pose2d(48, stackPos.getY(), Math.toRadians(0)), Math.toRadians(0),
-                                SampleMecanumDrive.getVelocityConstraint(50,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
-                                SampleMecanumDrive.getAccelerationConstraint(30))
-                        .forward(10,
-                                SampleMecanumDrive.getVelocityConstraint(50,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
-                                SampleMecanumDrive.getAccelerationConstraint(30))
-                        .build();
-                drive.followTrajectorySequenceAsync(Park1);
-            }
-            else if (tagOfInterest.id==14){
-                //to second spot
-                TrajectorySequence Park2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                        .setReversed(false)
-                        .splineToLinearHeading(new Pose2d(36, stackPos.getY(), Math.toRadians(0)), Math.toRadians(-45),
-                                SampleMecanumDrive.getVelocityConstraint(40,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
-                                SampleMecanumDrive.getAccelerationConstraint(30))
-                        .build();
-                drive.followTrajectorySequenceAsync(Park2);
-            }
-            else if(tagOfInterest.id==19) {
+            if(tagOfInterest.id==11) {
                 //to third spot
                 Pose2d temp = drive.getPoseEstimate();
                 TrajectorySequence Park3 = drive.trajectorySequenceBuilder(temp)
@@ -216,6 +192,32 @@ public class RR_Right_Auto_Edit extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequenceAsync(Park3);
             }
+
+            else if (tagOfInterest.id==14){
+                //to second spot
+                TrajectorySequence Park2 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .setReversed(false)
+                        .splineToLinearHeading(new Pose2d(36, stackPos.getY(), Math.toRadians(0)), Math.toRadians(-45),
+                                SampleMecanumDrive.getVelocityConstraint(40,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(30))
+                        .build();
+                drive.followTrajectorySequenceAsync(Park2);
+            }
+
+            else if (tagOfInterest.id==19){
+                //to first spot
+                TrajectorySequence Park1 = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .setReversed(false)
+                        .splineToSplineHeading(new Pose2d(48, stackPos.getY(), Math.toRadians(0)), Math.toRadians(0),
+                                SampleMecanumDrive.getVelocityConstraint(50,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(30))
+                        .forward(10,
+                                SampleMecanumDrive.getVelocityConstraint(50,DriveConstants.MAX_ANG_VEL,DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(30))
+                        .build();
+                drive.followTrajectorySequenceAsync(Park1);
+            }
+
             armControl.SpecialSleep(drive, 1000); //~~~~~EXPERIMENT with this time
             armControl.ReturnFromHigh(drive);
             //armControl.closeClaw();

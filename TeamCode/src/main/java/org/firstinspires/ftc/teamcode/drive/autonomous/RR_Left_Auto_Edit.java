@@ -63,7 +63,7 @@ public class RR_Left_Auto_Edit extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ArmControl armControl = new ArmControl(false, false, this);
+        ArmControl armControl = new ArmControl(false, false, true, this);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d startPose = new Pose2d(startX, startY, Math.toRadians(startHeading));  // added to replace line above

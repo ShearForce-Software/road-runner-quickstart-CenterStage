@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @TeleOp(name = "Demonstration Mode")
 
 public class KID_FRIENDLY extends LinearOpMode {
-    ArmControl armControl = new ArmControl(true, false, this);
+    ArmControl armControl = new ArmControl(true, false, true, this);
     @Override
     public void runOpMode() throws InterruptedException {
         armControl.Init(hardwareMap);

@@ -54,7 +54,7 @@ public class RR_Left_Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ArmControl armControl = new ArmControl(false, false, this);
+        ArmControl armControl = new ArmControl(false, false, true, this);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         String step = "none";
         armControl.STACK_POS = 550;

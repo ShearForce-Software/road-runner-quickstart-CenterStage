@@ -44,7 +44,7 @@ public class ArmControl {
     public static int LOW_POS = 1250;   //1850
     public static int MED_POS = 2300;   //3560
     public static int HIGH_POS = 1710;//550     900
-    public static int STACK_POS = 450;//1100
+    public static int STACK_POS = 400;//1100
 
     //FindCondeCenter variables
 //    public double forwardLG, shiftLG;
@@ -191,14 +191,14 @@ public class ArmControl {
         // swinging arm to high junction position
         //************************************************************
         if (IsFastServos){
-            spinOne.setPosition(0.08); //TODO: find pos
-            spinTwo.setPosition(0.08);
+            spinOne.setPosition(0.04); //TODO: find pos
+            spinTwo.setPosition(0.04);
         }
         else {
             spinOne.setPosition(0.18);
             spinTwo.setPosition(0.18);
         }
-        liftWrist.setPosition(.02);
+        liftWrist.setPosition(.06);
         //SpecialSleep(drive, 180);
         //************************************************************
         // raise slides to high junction delivery height
@@ -236,14 +236,14 @@ public class ArmControl {
         slideTwo.setPower(ARM_POWER);
         armGrip.setPosition(0.0);
         if (IsFastServos){
-            spinOne.setPosition(0.08); //TODO: find pos
-            spinTwo.setPosition(0.08);
+            spinOne.setPosition(0.04); //TODO: find pos
+            spinTwo.setPosition(0.04);
         }
         else {
             spinOne.setPosition(0.18);
             spinTwo.setPosition(0.18);
         }
-        liftWrist.setPosition(.02);
+        liftWrist.setPosition(.06);
         WaitForSlides(drive);
         slideOne.setPower(0);
         slideTwo.setPower(0);
@@ -389,7 +389,7 @@ public class ArmControl {
         //************************************************************
         // spin arm to cone pickup position
         //************************************************************
-        SpecialSleep(drive, 500);
+        SpecialSleep(drive, 700);
         spinOne.setPosition(1);
         spinTwo.setPosition(1);
         //************************************************************
@@ -419,7 +419,7 @@ public class ArmControl {
         armGrip.setPosition(0.0); // Close claw
         armRote.setPosition(0.11); // rotate arm 180 degrees (so gripper is backwards)
         liftWrist.setPosition(1);
-        SpecialSleep(drive, 500);
+        SpecialSleep(drive, 700);
         //spinOne.setPosition(.93); // spin arm to cone pickup position//1    TODO: return to 1?
         //spinTwo.setPosition(.93);//1                                        TODO: return to 1?
         spinOne.setPosition(1.0); // returned to 1.0

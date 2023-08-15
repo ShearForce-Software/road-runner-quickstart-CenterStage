@@ -13,13 +13,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
-@Disabled
+//@Disabled
 @TeleOp(group = "drive")
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Pose2d startPose=new Pose2d(36,-64.5,Math.toRadians(90));
+        Pose2d startPose=new Pose2d(36,-64.5,Math.toRadians(-90));
         drive.setPoseEstimate(startPose);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
